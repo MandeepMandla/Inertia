@@ -1,15 +1,16 @@
-FROM ubuntu:18.04
-MAINTAINER m_mandla@encs.concordia.ca
+FROM python:3
 
-RUN apt-get update -y
-RUN apt-get install python-pip -y
-RUN apt-get install gunicorn3 -y
+# set a directory for the app
+WORKDIR /usr/src/app
 
-COPY requirement.txt requirement.txt
-WORKDIR /opt/
-COPY . /opt/
+# copy all the files to the container
+COPY . .
 
-RUN pip install -r requirement.txt
+# install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
+# tell the port number the container should expose
+EXPOSE 5000
 
-CMD ["gunicorn3","-b","0.0.0.0:8000","app:app","--workers=5"]
+# run the command
+CMD ["python", "./app.py"]
